@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="INSERT_OR_UPDATE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>true</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_863027_invite_0_invite_access</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Protect Owner Access</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous) {
+
+    // Prüfung direkt im Script – nicht über Condition-Feld
+    // weil bei Delete 'current' anders ausgewertet wird
+
+    var isOwner = current.getValue('u_is_owner');
+
+    // Boolean-Wert sicher prüfen (kann '1', 'true' oder true sein)
+    if (isOwner !== '1' && isOwner !== true && isOwner !== 'true') {
+        return; // Kein Owner → nichts tun
+    }
+
+    // Ab hier: es ist ein Owner-Eintrag → blockieren
+
+    if (current.operation() === 'delete') {
+        current.setAbortAction(true);
+        gs.addErrorMessage('Der Ersteller des Antrags kann nicht entfernt werden.');
+        return;
+    }
+
+    if (current.operation() === 'update') {
+        var newState  = current.getValue('u_state');
+        var prevState = previous.getValue('u_state');
+
+        if (newState === 'revoked' && prevState !== 'revoked') {
+            current.setAbortAction(true);
+            gs.addErrorMessage('Der Ersteller des Antrags kann nicht entfernt werden.');
+            return;
+        }
+
+        // is_owner darf nicht auf false gesetzt werden
+        current.u_is_owner = true;
+    }
+
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-27 12:12:40</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>072e1eae8385c79094e813e0deaad3e2</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Protect Owner Access</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_update_name>sys_script_072e1eae8385c79094e813e0deaad3e2</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-27 12:18:51</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="delete_multiple" query="documentkey=072e1eae8385c79094e813e0deaad3e2"/>
+</record_update>

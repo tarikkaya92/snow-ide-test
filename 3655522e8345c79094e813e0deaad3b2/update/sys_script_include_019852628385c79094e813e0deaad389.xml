@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_863027_invite_0.InviteService</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>InviteService</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var InviteService = Class.create();
+InviteService.prototype = {
+
+    initialize: function() {
+        // Kein Scope-Prefix da gleicher Scope
+        this.tokenService = new InviteTokenService();
+    },
+
+    /**
+     * Owner beim Erstellen eines Records registrieren
+     */
+    registerOwner: function(recordTable, recordId, userSysId, context) {
+        // Doppelten Owner verhindern
+        if (this._ownerExists(recordTable, recordId)) {
+            gs.info('InviteService.registerOwner: Owner existiert bereits für ' + recordId);
+            return;
+        }
+
+        var gr = new GlideRecord('x_863027_invite_0_invite_access');
+        gr.initialize();
+        gr.u_record_table = recordTable;
+        gr.u_record_id    = recordId;
+        gr.u_user         = userSysId;
+        gr.u_role         = 'admin';
+        gr.u_state        = 'accepted';
+        gr.u_is_owner     = true;
+        gr.u_context      = context || '';
+        gr.u_invited_at   = new GlideDateTime();
+        var newSysId = gr.insert();
+
+        gs.info('InviteService.registerOwner: Owner-Eintrag angelegt ' + newSysId);
+    },
+
+    /**
+     * Einladung erstellen
+     */
+    createInvitation: function(params) {
+        if (!this.canInvite(params.recordId, params.invitedBy)) {
+            return { success: false, message: 'Keine Berechtigung.' };
+        }
+
+        if (this._alreadyInvited(params.recordTable, params.recordId, params.email)) {
+            return { success: false, message: 'Diese Person wurde bereits eingeladen.' };
+        }
+
+        var userSysId = this._findUserByEmail(params.email);
+
+        var gr = new GlideRecord('x_863027_invite_0_invite_access');
+        gr.initialize();
+        gr.u_record_table = params.recordTable;
+        gr.u_record_id    = params.recordId;
+        gr.u_email        = params.email;
+        gr.u_role         = params.role || 'admin';
+        gr.u_state        = 'pending';
+        gr.u_is_owner     = false;
+        gr.u_context      = params.context || '';
+        gr.u_invited_by   = params.invitedBy;
+        gr.u_invited_at   = new GlideDateTime();
+        if (userSysId) gr.u_user = userSysId;
+        var accessSysId = gr.insert();
+
+        // Token generieren
+        var token = this.tokenService.generateToken(accessSysId, 7);
+
+        // Event feuern
+        var eventGr = new GlideRecord('x_863027_invite_0_invite_access');
+        eventGr.get(accessSysId);
+        gs.eventQueue('x_863027_invite_0.invite.sent', eventGr, token, params.email);
+
+        gs.info('InviteService.createInvitation: Einladung erstellt für ' + params.email);
+        return { success: true, accessSysId: accessSysId };
+    },
+
+    /**
+     * Token einlösen und Zugriff aktivieren
+     */
+    acceptInvitation: function(token, userSysId) {
+        var result = this.tokenService.validate(token);
+
+        if (!result.valid) {
+            return { success: false, reason: result.reason };
+        }
+
+        var userEmail   = this._getUserEmail(userSysId);
+        var inviteEmail = result.accessRecord.getValue('u_email');
+
+        if (userEmail.toLowerCase() !== inviteEmail.toLowerCase()) {
+            return { success: false, reason: 'email_mismatch' };
+        }
+
+        result.accessRecord.u_user  = userSysId;
+        result.accessRecord.u_state = 'accepted';
+        result.accessRecord.update();
+
+        this.tokenService.markUsed(result.tokenRecord);
+
+        gs.eventQueue('x_863027_invite_0.invite.accepted', result.accessRecord);
+
+        return {
+            success:     true,
+            recordTable: result.accessRecord.getValue('u_record_table'),
+            recordId:    result.accessRecord.getValue('u_record_id')
+        };
+    },
+
+    /**
+     * Zugriff entziehen
+     */
+    revokeAccess: function(accessSysId, revokedByUserSysId) {
+        var gr = new GlideRecord('x_863027_invite_0_invite_access');
+        if (!gr.get(accessSysId)) {
+            return { success: false, message: 'Eintrag nicht gefunden.' };
+        }
+
+        if (gr.getValue('u_is_owner') === '1') {
+            return { success: false, message: 'Der Ersteller kann nicht entfernt werden.' };
+        }
+
+        if (!this.canRevoke(gr.getValue('u_record_id'), revokedByUserSysId)) {
+            return { success: false, message: 'Keine Berechtigung.' };
+        }
+
+        gr.u_state      = 'revoked';
+        gr.u_revoked_by = revokedByUserSysId;
+        gr.u_revoked_at = new GlideDateTime();
+        gr.update();
+
+        gs.eventQueue('x_863027_invite_0.invite.revoked', gr);
+        return { success: true };
+    },
+
+    // ─── Berechtigungsprüfungen ───────────────────────────────
+
+    canRead: function(recordId, userSysId) {
+        return !!this._getActiveAccess(recordId, userSysId);
+    },
+
+    canAdmin: function(recordId, userSysId) {
+        var access = this._getActiveAccess(recordId, userSysId);
+        if (!access) return false;
+        return access.getValue('u_role') === 'admin';
+    },
+
+    canInvite: function(recordId, userSysId) {
+        return this.canAdmin(recordId, userSysId);
+    },
+
+    canRevoke: function(recordId, requestingUserSysId) {
+        return this.canAdmin(recordId, requestingUserSysId);
+    },
+
+    isOwner: function(recordId, userSysId) {
+        var access = this._getActiveAccess(recordId, userSysId);
+        if (!access) return false;
+        return access.getValue('u_is_owner') === '1';
+    },
+
+    // ─── Hilfsmethoden ───────────────────────────────────────
+
+    _getActiveAccess: function(recordId, userSysId) {
+        var gr = new GlideRecord('x_863027_invite_0_invite_access');
+        gr.addQuery('u_record_id', recordId);
+        gr.addQuery('u_user', userSysId);
+        gr.addQuery('u_state', 'accepted');
+        gr.setLimit(1);
+        gr.query();
+        return gr.next() ? gr : null;
+    },
+
+    _ownerExists: function(recordTable, recordId) {
+        var gr = new GlideRecord('x_863027_invite_0_invite_access');
+        gr.addQuery('u_record_table', recordTable);
+        gr.addQuery('u_record_id', recordId);
+        gr.addQuery('u_is_owner', true);
+        gr.query();
+        return gr.next();
+    },
+
+    _alreadyInvited: function(recordTable, recordId, email) {
+        var gr = new GlideRecord('x_863027_invite_0_invite_access');
+        gr.addQuery('u_record_table', recordTable);
+        gr.addQuery('u_record_id', recordId);
+        gr.addQuery('u_email', email);
+        gr.addQuery('u_state', 'IN', 'pending,accepted');
+        gr.query();
+        return gr.next();
+    },
+
+    _findUserByEmail: function(email) {
+        var gr = new GlideRecord('sys_user');
+        gr.addQuery('email', email);
+        gr.setLimit(1);
+        gr.query();
+        return gr.next() ? gr.getUniqueValue() : null;
+    },
+
+    _getUserEmail: function(userSysId) {
+        var gr = new GlideRecord('sys_user');
+        return gr.get(userSysId) ? gr.getValue('email') : '';
+    },
+
+    type: 'InviteService'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-27 11:47:04</sys_created_on>
+        <sys_id>019852628385c79094e813e0deaad389</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>InviteService</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_update_name>sys_script_include_019852628385c79094e813e0deaad389</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-27 12:09:10</sys_updated_on>
+    </sys_script_include>
+</record_update>

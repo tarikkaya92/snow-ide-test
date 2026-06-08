@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl">
+    <sys_security_acl action="DELETE">
+        <active>true</active>
+        <admin_overrides>true</admin_overrides>
+        <advanced>false</advanced>
+        <applies_to/>
+        <condition/>
+        <controlled_by_refs/>
+        <decision_type>allow</decision_type>
+        <description/>
+        <local_or_existing>Existing</local_or_existing>
+        <name>x_863027_invite_0_bw_darlehen</name>
+        <operation display_value="read">read</operation>
+        <script/>
+        <security_attribute/>
+        <sys_class_name>sys_security_acl</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-28 07:42:56</sys_created_on>
+        <sys_id>e66ae23283c54b9094e813e0deaad3eb</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_863027_invite_0_bw_darlehen</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_update_name>sys_security_acl_e66ae23283c54b9094e813e0deaad3eb</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-28 07:42:56</sys_updated_on>
+        <type display_value="record">record</type>
+    </sys_security_acl>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</application>
+        <file_path/>
+        <instance_id>e1690f7afb184350363cf633beefdc04</instance_id>
+        <instance_name>dev386832</instance_name>
+        <name>sys_security_acl_e66ae23283c54b9094e813e0deaad3eb</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl"><sys_security_acl action="INSERT_OR_UPDATE"><active>true</active><admin_overrides>true</admin_overrides><advanced>false</advanced><applies_to/><condition/><controlled_by_refs/><decision_type>allow</decision_type><description/><local_or_existing>Existing</local_or_existing><name>x_863027_invite_0_bw_darlehen</name><operation display_value="read">read</operation><script/><security_attribute/><sys_class_name>sys_security_acl</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-05-28 07:42:56</sys_created_on><sys_id>e66ae23283c54b9094e813e0deaad3eb</sys_id><sys_mod_count>0</sys_mod_count><sys_name>x_863027_invite_0_bw_darlehen</sys_name><sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package><sys_policy/><sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope><sys_update_name>sys_security_acl_e66ae23283c54b9094e813e0deaad3eb</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-05-28 07:42:56</sys_updated_on><type display_value="record">record</type></sys_security_acl></record_update>]]></payload>
+        <payload_hash>-170539773</payload_hash>
+        <record_name>x_863027_invite_0_bw_darlehen</record_name>
+        <reverted_from/>
+        <source>7a55522e8345c79094e813e0deaad3bb</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-28 07:42:56</sys_created_on>
+        <sys_id>6a6a263283c54b9094e813e0deaad309</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19e6d8952030000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-28 07:42:56</sys_updated_on>
+        <type>Access Control</type>
+        <update_guid>aa6ae23210c54b909e98b34f78d9d4ef</update_guid>
+        <update_guid_history>aa6ae23210c54b909e98b34f78d9d4ef:-170539773</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-28 07:44:03</sys_created_on>
+        <sys_db_object display_value="" name="sys_security_acl">sys_security_acl</sys_db_object>
+        <sys_id>31b3c14a1f0c423090fc0e49b6ed6040</sys_id>
+        <sys_metadata>e66ae23283c54b9094e813e0deaad3eb</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_863027_invite_0_bw_darlehen</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_parent display_value="">0d6a623283c54b9094e813e0deaad3e1</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_scope_delete display_value="">020508d1dcff45708006a4c4d5d0da40</sys_scope_delete>
+        <sys_update_name>sys_security_acl_e66ae23283c54b9094e813e0deaad3eb</sys_update_name>
+        <sys_update_version display_value="sys_security_acl_e66ae23283c54b9094e813e0deaad3eb">6a6a263283c54b9094e813e0deaad309</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-28 07:44:03</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

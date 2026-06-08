@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_863027_invite_0.InviteTokenService</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>InviteTokenService</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var InviteTokenService = Class.create();
+InviteTokenService.prototype = {
+
+    initialize: function() {},
+
+    generateToken: function(accessSysId, expiryDays) {
+        expiryDays = expiryDays || 7;
+
+        var token   = this._createRandomToken();
+        var expires = new GlideDateTime();
+        expires.addDaysLocalTime(expiryDays);
+
+        var gr = new GlideRecord('x_863027_invite_0_invite_token');
+        gr.initialize();
+        gr.u_access     = accessSysId;
+        gr.u_token      = token;
+        gr.u_expires_at = expires;
+        gr.u_state      = 'active';
+        gr.insert();
+
+        gs.info('InviteTokenService.generateToken: Token erstellt für Access ' + accessSysId);
+        return token;
+    },
+
+    validate: function(token) {
+        var gr = new GlideRecord('x_863027_invite_0_invite_token');
+        gr.addQuery('u_token', token);
+        gr.addQuery('u_state', 'active');
+        gr.setLimit(1);
+        gr.query();
+
+        if (!gr.next()) {
+            return { valid: false, reason: 'invalid_token' };
+        }
+
+        // Ablauf prüfen
+        var now     = new GlideDateTime();
+        var expires = new GlideDateTime(gr.getValue('u_expires_at'));
+        if (expires.before(now)) {
+            gr.u_state = 'expired';
+            gr.update();
+            return { valid: false, reason: 'token_expired' };
+        }
+
+        // Access-Record laden
+        var accessGr = new GlideRecord('x_863027_invite_0_invite_access');
+        if (!accessGr.get(gr.getValue('u_access'))) {
+            return { valid: false, reason: 'access_not_found' };
+        }
+
+        return {
+            valid:        true,
+            tokenRecord:  gr,
+            accessRecord: accessGr
+        };
+    },
+
+    markUsed: function(tokenRecord) {
+        tokenRecord.u_state   = 'used';
+        tokenRecord.u_used_at = new GlideDateTime();
+        tokenRecord.update();
+    },
+
+    _createRandomToken: function() {
+        var random = new GlideSecureRandomUtil();
+        return random.getSecureRandomString(64);
+    },
+
+    type: 'InviteTokenService'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-27 11:46:15</sys_created_on>
+        <sys_id>76481aa28385c79094e813e0deaad3ed</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>InviteTokenService</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_update_name>sys_script_include_76481aa28385c79094e813e0deaad3ed</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-27 12:09:20</sys_updated_on>
+    </sys_script_include>
+</record_update>

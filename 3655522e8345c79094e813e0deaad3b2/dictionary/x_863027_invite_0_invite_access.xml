@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="97c5526e8345c79094e813e0deaad317" label="Invite Access" max_length="40" name="x_863027_invite_0_invite_access" type="collection">
+        <element label="Role" max_length="40" name="u_role" type="string"/>
+        <element label="Invited By" max_length="32" name="u_invited_by" reference="sys_user" type="reference"/>
+        <element label="User" max_length="32" name="u_user" reference="sys_user" type="reference"/>
+        <element label="Email" max_length="200" name="u_email" type="string"/>
+        <element label="Invited At" max_length="40" name="invited_at" type="glide_date_time"/>
+        <element label="Revoked At" max_length="40" name="u_revoked_at" type="glide_date_time"/>
+        <element label="Record ID" max_length="32" name="u_record_id" type="string"/>
+        <element label="Revoked By" max_length="32" name="u_revoked_by" reference="sys_user" type="reference"/>
+        <element choice="3" default="pending" label="State" max_length="255" name="u_state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="pending" sequence="0" value="pending"/>
+                <element inactive_on_update="false" label="accepted" sequence="1" value="accepted"/>
+                <element inactive_on_update="false" label="revoked" sequence="2" value="revoked"/>
+            </choice>
+        </element>
+        <element label="Is Owner" max_length="40" name="u_is_owner" type="boolean"/>
+        <element label="Record Table" max_length="100" name="u_record_table" type="string"/>
+        <element label="Context" max_length="80" name="u_context" type="string"/>
+        <index name="index">
+            <element name="u_invited_by"/>
+        </index>
+        <index name="index2">
+            <element name="u_revoked_by"/>
+        </index>
+        <index name="index3">
+            <element name="u_user"/>
+        </index>
+    </element>
+</database>
