@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>general</category>
+        <client_script/>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_863027_invite_0_invite_person_dialog.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly xmlns:j="jelly:core" xmlns:g="glide" xmlns:g2="null">
+
+<g:evaluate>
+    var antragSysId = RP.getParameterValue('antrag_sys_id') + '';
+    var antragTable = RP.getParameterValue('antrag_table')  + '';
+    gs.info('InviteDialog geöffnet: sysId=' + antragSysId + ' table=' + antragTable);
+</g:evaluate>
+
+<style>
+    .invite-wrap {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        min-width: 420px;
+    }
+    .invite-wrap h3 {
+        margin: 0 0 6px 0;
+        color: #0070d2;
+    }
+    .invite-wrap p {
+        margin: 0 0 16px 0;
+        color: #666;
+        font-size: 13px;
+    }
+    .invite-wrap label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 4px;
+        margin-top: 14px;
+        color: #333;
+        font-size: 13px;
+    }
+    .invite-wrap input,
+    .invite-wrap textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+    .invite-wrap input:focus,
+    .invite-wrap textarea:focus {
+        border-color: #0070d2;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(0,112,210,0.2);
+    }
+    .btn-row {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+    .btn-primary {
+        background: #0070d2;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+    .btn-primary:hover { background: #005fb2; }
+    .btn-secondary {
+        background: #f4f6f8;
+        color: #333;
+        border: 1px solid #ccc;
+        padding: 8px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+    .msg-error {
+        background: #fce8e8;
+        border: 1px solid #e53935;
+        color: #c62828;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        font-size: 13px;
+        display: none;
+    }
+    .msg-success {
+        background: #e8f5e9;
+        border: 1px solid #43a047;
+        color: #2e7d32;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        font-size: 13px;
+        display: none;
+    }
+    .msg-loading {
+        color: #666;
+        font-size: 12px;
+        margin-top: 8px;
+        display: none;
+    }
+</style>
+
+<div class="invite-wrap">
+
+    <h3>Person einladen</h3>
+    <p>Laden Sie eine weitere Person ein, gemeinsam an diesem Antrag zu arbeiten.</p>
+
+    <div id="msg_error"   class="msg-error"></div>
+    <div id="msg_success" class="msg-success"></div>
+    <div id="msg_loading" class="msg-loading">⏳ Wird versendet...</div>
+
+    <label for="inv_email">E-Mail-Adresse *</label>
+    <input type="email"
+           id="inv_email"
+           placeholder="beispiel@domain.de" />
+
+    <label for="inv_msg">Persönliche Nachricht (optional)</label>
+    <textarea id="inv_msg" rows="3"
+              placeholder="Ich lade Sie ein..."></textarea>
+
+    <!-- sys_id und table als versteckte Felder – sicherste Methode -->
+    <input type="hidden" id="inv_record_id"    value="${antragSysId}" />
+    <input type="hidden" id="inv_record_table" value="${antragTable}" />
+
+    <div class="btn-row">
+        <button class="btn-secondary" onclick="inviteCancel()">Abbrechen</button>
+        <button class="btn-primary"   onclick="inviteSubmit()">Einladung senden</button>
+    </div>
+
+</div>
+
+<script>
+
+    function inviteSubmit() {
+
+        var email   = document.getElementById('inv_email').value.trim();
+        var msg     = document.getElementById('inv_msg').value.trim();
+
+        // Hidden Fields auslesen – zuverlässigste Methode
+        var sysId   = document.getElementById('inv_record_id').value.trim();
+        var table   = document.getElementById('inv_record_table').value.trim();
+
+        // Debug
+        console.log('sysId:', sysId, 'table:', table, 'email:', email);
+
+        // Validierung
+        if (!email) {
+            inviteShowError('Bitte geben Sie eine E-Mail-Adresse ein.');
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            inviteShowError('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+            return;
+        }
+        if (!sysId) {
+            inviteShowError('Fehler: Antrags-ID nicht gefunden. Bitte Seite neu laden.');
+            return;
+        }
+
+        inviteHideMessages();
+        document.getElementById('msg_loading').style.display = 'block';
+
+        // Ajax Call
+        var ga = new GlideAjax('InviteAjaxService');
+        ga.addParam('sysparm_name',    'sendInvitation');
+        ga.addParam('sysparm_antrag',  sysId);
+        ga.addParam('sysparm_table',   table);
+        ga.addParam('sysparm_email',   email);
+        ga.addParam('sysparm_message', msg);
+
+        ga.getXMLAnswer(function(response) {
+            document.getElementById('msg_loading').style.display = 'none';
+            console.log('Server Response:', response);
+
+            try {
+                var result = JSON.parse(response);
+                if (result.success) {
+                    inviteShowSuccess('Einladung erfolgreich an ' + email + ' gesendet!');
+                    setTimeout(function() {
+                        inviteCancel();
+                        if (window.top) window.top.location.reload();
+                    }, 2000);
+                } else {
+                    inviteShowError(result.message || 'Unbekannter Fehler.');
+                }
+            } catch(e) {
+                console.error('Parse error:', e, 'Response:', response);
+                inviteShowError('Fehler beim Verarbeiten der Server-Antwort.');
+            }
+        });
+    }
+
+    function inviteCancel() {
+        try {
+            GlideDialogWindow.get().destroy();
+        } catch(e) {
+            window.close();
+        }
+    }
+
+    function inviteShowError(msg) {
+        var el = document.getElementById('msg_error');
+        el.innerHTML = '⚠️ ' + msg;
+        el.style.display = 'block';
+        document.getElementById('msg_success').style.display = 'none';
+    }
+
+    function inviteShowSuccess(msg) {
+        var el = document.getElementById('msg_success');
+        el.innerHTML = '✅ ' + msg;
+        el.style.display = 'block';
+        document.getElementById('msg_error').style.display = 'none';
+    }
+
+    function inviteHideMessages() {
+        document.getElementById('msg_error').style.display   = 'none';
+        document.getElementById('msg_success').style.display = 'none';
+    }
+
+</script>
+
+</j:jelly>]]></html>
+        <name>invite_person_dialog</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-27 12:23:12</sys_created_on>
+        <sys_id>ffb0222683c5c79094e813e0deaad3a6</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>invite_person_dialog</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_update_name>sys_ui_page_ffb0222683c5c79094e813e0deaad3a6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-27 12:46:00</sys_updated_on>
+    </sys_ui_page>
+</record_update>

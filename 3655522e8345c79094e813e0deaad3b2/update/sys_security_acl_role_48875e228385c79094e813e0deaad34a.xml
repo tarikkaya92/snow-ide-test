@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-27 11:41:48</sys_created_on>
+        <sys_id>48875e228385c79094e813e0deaad34a</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_863027_invite_0_invite_token.x_863027_invite_0.user</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_security_acl display_value="x_863027_invite_0_invite_token">33775e228385c79094e813e0deaad329</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_48875e228385c79094e813e0deaad34a</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-27 11:41:48</sys_updated_on>
+        <sys_user_role display_value="x_863027_invite_0.user" name="x_863027_invite_0.user">8755522e8345c79094e813e0deaad3e9</sys_user_role>
+    </sys_security_acl_role>
+</record_update>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="DELETE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-28 07:42:56</sys_created_on>
+        <sys_id>266ae23283c54b9094e813e0deaad3c7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_863027_invite_0_bw_darlehen.x_863027_invite_0.admin</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_security_acl display_value="x_863027_invite_0_bw_darlehen">a26ae23283c54b9094e813e0deaad3ae</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_266ae23283c54b9094e813e0deaad3c7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-28 07:42:56</sys_updated_on>
+        <sys_user_role display_value="x_863027_invite_0.admin" name="x_863027_invite_0.admin">4355522e8345c79094e813e0deaad3d3</sys_user_role>
+    </sys_security_acl_role>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</application>
+        <file_path/>
+        <instance_id>e1690f7afb184350363cf633beefdc04</instance_id>
+        <instance_name>dev386832</instance_name>
+        <name>sys_security_acl_role_266ae23283c54b9094e813e0deaad3c7</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role"><sys_security_acl_role action="INSERT_OR_UPDATE"><sys_class_name>sys_security_acl_role</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2026-05-28 07:42:56</sys_created_on><sys_id>266ae23283c54b9094e813e0deaad3c7</sys_id><sys_mod_count>0</sys_mod_count><sys_name>x_863027_invite_0_bw_darlehen.x_863027_invite_0.admin</sys_name><sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package><sys_policy/><sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope><sys_security_acl display_value="x_863027_invite_0_bw_darlehen">a26ae23283c54b9094e813e0deaad3ae</sys_security_acl><sys_update_name>sys_security_acl_role_266ae23283c54b9094e813e0deaad3c7</sys_update_name><sys_updated_by>admin</sys_updated_by><sys_updated_on>2026-05-28 07:42:56</sys_updated_on><sys_user_role display_value="x_863027_invite_0.admin" name="x_863027_invite_0.admin">4355522e8345c79094e813e0deaad3d3</sys_user_role></sys_security_acl_role></record_update>]]></payload>
+        <payload_hash>215879422</payload_hash>
+        <record_name>x_863027_invite_0_bw_darlehen.x_863027_invite_0.admin</record_name>
+        <reverted_from/>
+        <source>7a55522e8345c79094e813e0deaad3bb</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-28 07:42:56</sys_created_on>
+        <sys_id>e26ae23283c54b9094e813e0deaad3ea</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19e6d8951cd0000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-28 07:42:56</sys_updated_on>
+        <type>Access Roles</type>
+        <update_guid>a26ae23241c54b90268a4589189178e9</update_guid>
+        <update_guid_history>a26ae23241c54b90268a4589189178e9:215879422</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="x_863027_invite_0_bw_darlehen.x_863027_invite_0.admin">36aa227283c54b9094e813e0deaad34e</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-05-28 07:44:02</sys_created_on>
+        <sys_db_object display_value="" name="sys_security_acl_role">sys_security_acl_role</sys_db_object>
+        <sys_id>56d1ac139d4643288ef866b080bc8440</sys_id>
+        <sys_metadata>266ae23283c54b9094e813e0deaad3c7</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_863027_invite_0_bw_darlehen.x_863027_invite_0.admin</sys_name>
+        <sys_package display_value="Invite Core Framework" source="x_863027_invite_0">3655522e8345c79094e813e0deaad3b2</sys_package>
+        <sys_parent display_value="">a26ae23283c54b9094e813e0deaad3ae</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Invite Core Framework">3655522e8345c79094e813e0deaad3b2</sys_scope>
+        <sys_scope_delete display_value="">020508d1dcff45708006a4c4d5d0da40</sys_scope_delete>
+        <sys_update_name>sys_security_acl_role_266ae23283c54b9094e813e0deaad3c7</sys_update_name>
+        <sys_update_version display_value="sys_security_acl_role_266ae23283c54b9094e813e0deaad3c7">e26ae23283c54b9094e813e0deaad3ea</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-05-28 07:44:02</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

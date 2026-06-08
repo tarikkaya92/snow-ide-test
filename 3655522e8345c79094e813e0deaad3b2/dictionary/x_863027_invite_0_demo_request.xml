@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="362956268385c79094e813e0deaad39d" label="Demo Request" max_length="40" name="x_863027_invite_0_demo_request" type="collection">
+        <element choice="3" label="State" max_length="40" name="u_state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="submitted" sequence="1" value="submitted"/>
+                <element inactive_on_update="false" label="draft" sequence="0" value="draft"/>
+                <element inactive_on_update="false" label="closed" sequence="2" value="closed"/>
+            </choice>
+        </element>
+        <element label="Short Description" max_length="200" name="u_short_description" type="string"/>
+        <element label="Opened By" max_length="32" name="u_opened_by" reference="sys_user" type="reference"/>
+        <index name="index">
+            <element name="u_opened_by"/>
+        </index>
+    </element>
+</database>

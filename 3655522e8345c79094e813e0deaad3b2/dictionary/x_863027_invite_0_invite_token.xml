@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="7e77da228385c79094e813e0deaad324" label="Invite Token" max_length="40" name="x_863027_invite_0_invite_token" type="collection">
+        <element label="Used At" max_length="40" name="u_used_at" type="glide_date_time"/>
+        <element label="Access" max_length="32" name="u_access" reference="x_863027_invite_0_invite_access" type="reference"/>
+        <element label="Token" max_length="255" name="u_token" type="string"/>
+        <element label="Expires At" max_length="40" name="u_expires_at" type="glide_date_time"/>
+        <element choice="3" default="active" label="State" max_length="255" name="u_state" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="revoked" sequence="3" value="revoked"/>
+                <element inactive_on_update="false" label="used" sequence="1" value="used"/>
+                <element inactive_on_update="false" label="active" sequence="0" value="active"/>
+                <element inactive_on_update="false" label="expired" sequence="2" value="expired"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="u_access"/>
+        </index>
+    </element>
+</database>
